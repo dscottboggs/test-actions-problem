@@ -1,0 +1,24 @@
+name: Deploy the live branch
+run-name: ${{ github.actor }} pushed to main
+
+on: [ push ]
+
+jobs:
+  update:
+    name: Update the live service
+    runs-on: ubuntu-latest
+    steps:
+      - name: stop the service
+        uses: appleboy/ssh-action@v1.0.3
+        env: 
+          secret_value: ${{ secrets.secret_value }}
+        with:
+          host: ${{ secrets.host }}
+          username: admin
+          key: ${{ secrets.ssh_private_key }}
+          envs: secret_value
+          script: |
+            cd test-actions-problem
+            docker-compose down
+            git pull
+            docker compose up -d
