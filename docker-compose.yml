@@ -1,0 +1,8 @@
+
+services:
+  example:
+    image: ubuntu
+    environment:
+      secret_value: ${secret_value?Secret not found}
+    command: 'echo $secret_value'
+
